@@ -12,7 +12,7 @@ afterAll(() => {
 })
 
 describe('Topics', () => {
-	it('GET:200 responds with the list of topics', () => {
+	it('GET:200 /api/topics responds with the list of topics', () => {
 		return request(app)
 			.get('/api/topics')
 			.expect(200)
@@ -23,6 +23,16 @@ describe('Topics', () => {
 					expect(typeof topic.slug).toBe('string')
 					expect(typeof topic.description).toBe('string')
 				})
+			})
+	})
+})
+describe('API', () => {
+	it('GET:200 /api provides description of all other endpoints available', () => {
+		return request(app)
+			.get('/api')
+			.expect(200)
+			.then(({ body: { endpoints } }) => {
+				expect(typeof endpoints).toBe('object')
 			})
 	})
 })
