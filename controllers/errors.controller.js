@@ -4,6 +4,7 @@ exports.handlePsqlErrors = (err, req, res, next) => {
 }
 exports.handleCustomErrors = (err, req, res, next) => {
 	if (err.status && err.msg) res.status(err.status).send({ msg: err.msg })
+	else next(err)
 }
 exports.handleServerErrors = (err, req, res, next) => {
 	console.log('err')

@@ -11,8 +11,8 @@ app.use(express.json())
 
 app.get('/api/topics', getTopics)
 
-app.use((err, req, res, next), handlePsqlErrors)
-app.use((err, req, res, next), handleCustomErrors)
-app.use((err, req, res, next), handleServerErrors)
+app.use((req, res, next) => handlePsqlErrors)
+app.use((req, res, next) => handleCustomErrors)
+app.use((req, res, next) => handleServerErrors)
 
 module.exports = app
