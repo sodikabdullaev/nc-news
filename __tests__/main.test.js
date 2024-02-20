@@ -109,4 +109,30 @@ describe('Articles', () => {
 	it('GET: 400 /api/articles/invalidId/comments responds with bad request for invalid article id', () => {
 		return request(app).get('/api/articles/invalidId/comments').expect(400)
 	})
+
+	it('PATCH: 200 /api/articles/article_id responds with changed article by given article id', () => {
+		return request(app)
+			.patch('/api/articles/1')
+			.set('Accept', 'application/json')
+			.send({ inc_votes: 1 })
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article.article_id).toBe(1)
+				expect(article.votes).toBe(101)
+			})
+	})
+	it('PATCH: 404 /api/articles/article_id responds not found error for invalid article id', () => {
+		return request(app)
+			.patch('/api/articles/999')
+			.set('Accept', 'application/json')
+			.send({ inc_votes: 1 })
+			.expect(404)
+	})
+	it('PATCH: 400 /api/articles/article_id responds bad request error when given invalid body', () => {
+		return request(app)
+			.patch('/api/articles/1')
+			.set('Accept', 'application/json')
+			.send({ inc_votes: 'not-number' })
+			.expect(400)
+	})
 })
