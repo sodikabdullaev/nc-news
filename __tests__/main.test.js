@@ -36,3 +36,35 @@ describe('API', () => {
 			})
 	})
 })
+describe('Articles', () => {
+	it('GET:200 responds with the matching id by given unique id', () => {
+		return request(app)
+			.get('/api/articles/1')
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(typeof article.article_id).toBe('number')
+				expect(typeof article.title).toBe('string')
+				expect(typeof article.topic).toBe('string')
+				expect(typeof article.author).toBe('string')
+				expect(typeof article.created_at).toBe('string')
+				expect(typeof article.votes).toBe('number')
+				expect(typeof article.article_img_url).toBe('string')
+			})
+	})
+	it('GET:404 responds with not found message for non-exist id', () => {
+		return request(app)
+			.get('/api/articles/999')
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Not found')
+			})
+	})
+	it('GET:400 responds bad request given invalid id', () => {
+		return request(app)
+			.get('/api/articles/invalidId')
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Bad request')
+			})
+	})
+})
