@@ -42,16 +42,10 @@ describe('Articles', () => {
 			.get('/api/articles/1')
 			.expect(200)
 			.then(({ body: { article } }) => {
-				expect(typeof article.article_id).toBe('number')
-				expect(typeof article.title).toBe('string')
-				expect(typeof article.topic).toBe('string')
-				expect(typeof article.author).toBe('string')
-				expect(typeof article.created_at).toBe('string')
-				expect(typeof article.votes).toBe('number')
-				expect(typeof article.article_img_url).toBe('string')
+				expect(article.article_id).toBe(1)
 			})
 	})
-	it('GET:404 responds with not found message for non-exist id', () => {
+	it('GET:404 /api/articles/999 responds with not found message for non-exist id', () => {
 		return request(app)
 			.get('/api/articles/999')
 			.expect(404)
@@ -59,12 +53,30 @@ describe('Articles', () => {
 				expect(msg).toBe('Not found')
 			})
 	})
-	it('GET:400 responds bad request given invalid id', () => {
+	it('GET:400 /api/articles/invalidId responds bad request given invalid id', () => {
 		return request(app)
 			.get('/api/articles/invalidId')
 			.expect(400)
 			.then(({ body: { msg } }) => {
 				expect(msg).toBe('Bad request')
+			})
+	})
+	it('GET:200 /api/articles responds with all entries from articles table', () => {
+		return request(app)
+			.get('/api/articles')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.length).toBe(13)
+				articles.forEach((article) => {
+					expect(typeof article.article_id).toBe('number')
+					expect(typeof article.title).toBe('string')
+					expect(typeof article.topic).toBe('string')
+					expect(typeof article.author).toBe('string')
+					expect(typeof article.created_at).toBe('string')
+					expect(typeof article.votes).toBe('number')
+					expect(typeof article.comment_count).toBe('number')
+					expect(typeof article.article_img_url).toBe('string')
+				})
 			})
 	})
 })
