@@ -3,6 +3,7 @@ const app = require('../app')
 const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
 const db = require('../db/connection')
+require('jest-sorted')
 
 beforeEach(() => {
 	return seed(data)
@@ -78,5 +79,34 @@ describe('Articles', () => {
 					expect(typeof article.article_img_url).toBe('string')
 				})
 			})
+	})
+	it('GET: 200 /api/articles/1/comments responds with comment data belongs to given article', () => {
+		return request(app)
+			.get('/api/articles/1/comments')
+			.expect(200)
+			.then(({ body: { comments } }) => {
+				expect(comments.length).toBe(11)
+				comments.forEach((comment) => {
+					expect(comment.article_id).toBe(1)
+
+					expect(typeof comment.comment_id).toBe('number')
+					expect(typeof comment.author).toBe('string')
+					expect(typeof comment.body).toBe('string')
+					expect(typeof comment.votes).toBe('number')
+					expect(typeof comment.created_at).toBe('string')
+				})
+				expect(
+					comments.map((comment) => comment.created_at)
+				).toBeSorted({ descending: true })
+			})
+	})
+	it('GET: 404 /api/articles/10/comments responds with no comment on existing article', () => {
+		return request(app).get('/api/articles/10/comments').expect(404)
+	})
+	it('GET: 404 /api/articles/999/comments responds with not found for non-exist article id', () => {
+		return request(app).get('/api/articles/999/comments').expect(404)
+	})
+	it('GET: 400 /api/articles/invalidId/comments responds with bad request for invalid article id', () => {
+		return request(app).get('/api/articles/invalidId/comments').expect(400)
 	})
 })
