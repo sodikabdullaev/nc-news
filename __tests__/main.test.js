@@ -100,14 +100,24 @@ describe('Articles', () => {
 				).toBeSorted({ descending: true })
 			})
 	})
-	it('GET: 404 /api/articles/10/comments responds with no comment on existing article', () => {
-		return request(app).get('/api/articles/10/comments').expect(404)
+	it('GET: 200 /api/articles/10/comments responds with empty array on existing article but no comment there yet', () => {
+		return request(app).get('/api/articles/10/comments').expect(200)
 	})
 	it('GET: 404 /api/articles/999/comments responds with not found for non-exist article id', () => {
-		return request(app).get('/api/articles/999/comments').expect(404)
+		return request(app)
+			.get('/api/articles/999/comments')
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Not found')
+			})
 	})
 	it('GET: 400 /api/articles/invalidId/comments responds with bad request for invalid article id', () => {
-		return request(app).get('/api/articles/invalidId/comments').expect(400)
+		return request(app)
+			.get('/api/articles/invalidId/comments')
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Bad request')
+			})
 	})
 
 	it('PATCH: 200 /api/articles/article_id responds with changed article by given article id', () => {
@@ -134,5 +144,49 @@ describe('Articles', () => {
 			.set('Accept', 'application/json')
 			.send({ inc_votes: 'not-number' })
 			.expect(400)
+	})
+	it('POST 201 /api/articles/article_id/comments responds with added comment when posted', () => {
+		const body = {
+			body: 'We can do comments while testing do not we?',
+			author: 'icellusedkars',
+		}
+		return request(app)
+			.post('/api/articles/1/comments')
+			.set('Accept', 'application/json')
+			.send(body)
+			.expect(201)
+			.then(({ body: { comment } }) => {
+				expect(comment.body).toBe(body.body)
+				expect(comment.author).toBe(body.author)
+				expect(comment.article_id).toBe(1)
+			})
+	})
+	it('POST 400 /api/articles/article_id/comments responds with bad request when poseted non-exist author name', () => {
+		const body = {
+			body: 'We can do comments while testing do not we?',
+			author: 'iAmNotinUsers',
+		}
+		return request(app)
+			.post('/api/articles/1/comments')
+			.set('Accept', 'application/json')
+			.send(body)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Bad request')
+			})
+	})
+	it('POST 400 /api/articles/article_id/comments responds with bad request when body is empty or non-string type or invalid id', () => {
+		const body = {
+			body: 999,
+			author: 'icellusedkars',
+		}
+		return request(app)
+			.post('/api/articles/999/comments')
+			.set('Accept', 'application/json')
+			.send(body)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Bad request')
+			})
 	})
 })
