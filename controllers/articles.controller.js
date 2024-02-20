@@ -2,6 +2,7 @@ const {
 	selectArticleById,
 	selectArticles,
 	selectCommentsByArticleId,
+	updateArticleVote,
 } = require('../models/articles.model')
 
 exports.getArticleById = (req, res, next) => {
@@ -30,4 +31,15 @@ exports.getCommentsByArticleId = (req, res, next) => {
 			res.status(200).send({ comments: responses[1] })
 		})
 		.catch(next)
+}
+exports.patchArticle = (req, res, next) => {
+	const { article_id } = req.params
+	const { inc_votes } = req.body
+	if (article_id && typeof inc_votes === 'number') {
+		updateArticleVote(inc_votes, article_id)
+			.then((article) => {
+				res.status(200).send({ article })
+			})
+			.catch(next)
+	} else next({ status: 400, msg: 'Bad request' })
 }
