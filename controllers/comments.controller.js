@@ -1,4 +1,4 @@
-const { insertComment } = require('../models/comments.model')
+const { insertComment, deleteComment } = require('../models/comments.model')
 
 exports.postComment = (req, res, next) => {
 	const { article_id } = req.params
@@ -9,4 +9,14 @@ exports.postComment = (req, res, next) => {
 			})
 			.catch(next)
 	} else next({ status: 400, msg: 'Bad request' })
+}
+exports.removeComment = (req, res, next) => {
+	const { comment_id } = req.params
+	deleteComment(comment_id)
+		.then(() => {
+			res.status(204).send({
+				msg: 'Comment has been deleted successfully',
+			})
+		})
+		.catch(next)
 }
