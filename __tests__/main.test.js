@@ -217,3 +217,33 @@ describe('Users', () => {
 			})
 	})
 })
+
+describe('Articles with queries', () => {
+	it('GET: 200 /api/articles?topic=mitch responds with all articles topic is matching to the query request', () => {
+		return request(app)
+			.get('/api/articles?topic=mitch')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.length).toBe(12)
+				articles.forEach((article) => {
+					expect(article.topic).toBe('mitch')
+				})
+			})
+	})
+	it('GET: 404 /api/articles?topic=nox-exist responds with not found for non-exist topic', () => {
+		return request(app)
+			.get('/api/articles?topic=iAmNotTopic')
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Not found')
+			})
+	})
+	it('GET: 200 /api/articles?juestToCheck=ifWondering ignores invalid querying', () => {
+		return request(app)
+			.get('/api/articles?juestToCheck=ifWondering')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.length).toBe(13)
+			})
+	})
+})
