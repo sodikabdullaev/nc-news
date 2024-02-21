@@ -119,7 +119,6 @@ describe('Articles', () => {
 				expect(msg).toBe('Bad request')
 			})
 	})
-
 	it('PATCH: 200 /api/articles/article_id responds with changed article by given article id', () => {
 		return request(app)
 			.patch('/api/articles/1')
@@ -188,5 +187,17 @@ describe('Articles', () => {
 			.then(({ body: { msg } }) => {
 				expect(msg).toBe('Bad request')
 			})
+	})
+})
+
+describe('Comments', () => {
+	it('DELETE: 204 /api/comments/comment_id deletes the comment given by id', () => {
+		return request(app).delete('/api/comments/1').expect(204)
+	})
+	it('DELETE: 404 /api/comments/999 responds with 404 for non-exist comment id', () => {
+		return request(app).delete('/api/comments/999').expect(404)
+	})
+	it('DELETE: 400 /api/comments/invalidId responds with bad request (400) for invalid comment id', () => {
+		return request(app).delete('/api/comments/invalidId').expect(400)
 	})
 })
