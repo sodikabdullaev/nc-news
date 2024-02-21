@@ -3,15 +3,17 @@ const format = require('pg-format')
 exports.selectArticleById = (id) => {
 	return db
 		.query(
-			`SELECT * FROM articles
-        WHERE article_id = $1
+			`SELECT articles.* , 
+			(SELECT COUNT(comments.comment_id)::int as comment_count FROM comments WHERE comments.article_id =$1)
+			FROM articles
+			WHERE articles.article_id = $1
     `,
 			[id]
 		)
 		.then(({ rows }) => {
-			if (rows.length === 0)
+			if (rows.length === 0) {
 				return Promise.reject({ status: 404, msg: 'Not found' })
-			else return rows
+			} else return rows
 		})
 }
 exports.selectArticles = (topic) => {

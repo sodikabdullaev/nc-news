@@ -188,6 +188,14 @@ describe('Articles', () => {
 				expect(msg).toBe('Bad request')
 			})
 	})
+	it('GET: 200 /api/articles/1 responds with matching article also count of its comments', () => {
+		return request(app)
+			.get('/api/articles/1')
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(typeof article.comment_count).toBe('number')
+			})
+	})
 })
 
 describe('Comments', () => {
