@@ -201,3 +201,19 @@ describe('Comments', () => {
 		return request(app).delete('/api/comments/invalidId').expect(400)
 	})
 })
+
+describe('Users', () => {
+	it('GET: 200 /api/user responds all entries from users table', () => {
+		return request(app)
+			.get('/api/users')
+			.expect(200)
+			.then(({ body: { users } }) => {
+				expect(users.length).toBe(4)
+				users.forEach((user) => {
+					expect(typeof user.username).toBe('string')
+					expect(typeof user.name).toBe('string')
+					expect(typeof user.avatar_url).toBe('string')
+				})
+			})
+	})
+})
