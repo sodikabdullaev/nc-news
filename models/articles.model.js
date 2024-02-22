@@ -29,7 +29,7 @@ exports.selectArticles = (topic) => {
 	sql += ` GROUP BY articles.article_id
     ORDER BY articles.created_at desc`
 	return db.query(sql, values).then(({ rows }) => {
-		if (rows.length === 0)
+		if (rows.length === 0 && topic === undefined)
 			return Promise.reject({ status: 404, msg: 'Not found' })
 		else return rows
 	})
