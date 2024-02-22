@@ -4,6 +4,7 @@ const {
 	selectCommentsByArticleId,
 	updateArticleVote,
 } = require('../models/articles.model')
+const { getTopicBySlug } = require('../models/topics.model')
 
 exports.getArticleById = (req, res, next) => {
 	const { article_id } = req.params
@@ -15,9 +16,12 @@ exports.getArticleById = (req, res, next) => {
 }
 exports.getArticles = (req, res, next) => {
 	const { topic } = req.query
-	selectArticles(topic)
-		.then((rows) => {
-			res.status(200).send({ articles: rows })
+	const promises = [selectArticles(topic)]
+	if (topic) promises.push(getTopicBySlug(topic))
+
+	Promise.all(promises)
+		.then((responses) => {
+			res.status(200).send({ articles: responses[0] })
 		})
 		.catch(next)
 }

@@ -254,4 +254,12 @@ describe('Articles with queries', () => {
 				expect(articles.length).toBe(13)
 			})
 	})
+	it('GET: 200 /api/articles?topic=paper responds with 200 when topic exists but no articles yet', () => {
+		return request(app)
+			.get('/api/articles?topic=paper')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.length).toBe(0)
+			})
+	})
 })
