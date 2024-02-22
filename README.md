@@ -66,7 +66,6 @@ MIT
 [psql]: https://www.postgresql.org/
 [jst]: https://jestjs.io/
 [stst]: https://www.npmjs.com/package/supertest
-[esql]: https://www.elephantsql.com/
-[rndr]: https://render.com/
-
-[prl]: [https://nc-news-4wkm.onrender.com/api]
+[esql]: https://www.elephantsql.com
+[rndr]: https://render.com
+[prl]: https://nc-news-4wkm.onrender.com/api
