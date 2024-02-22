@@ -4,6 +4,14 @@
 
 The web app is powered with REST API so that it can interact with different platforms. [PSQL][psql] is used as a database and [node-postgress][npl] to connect with. The aim of the project is to replicate news websites such as Reddit and etc. Testing is done with [Jest][jst] and [Supertest][stst].
 
+### Requirements
+
+You will need the following installed to run this project in your computer.
+
+> -- [npm][npm]</br>
+> -- [Node.js][node] >=18.0.0</br>
+> -- [PSQL][psql]</br>
+
 ### Installation
 
 You can fork or create a new branch from the main repository.
@@ -62,6 +70,8 @@ The live demo is available [here][prl]
 MIT
 
 [//]: #
+[npm]: https://www.npmjs.com/
+[node]: https://nodejs.org/en
 [npl]: https://node-postgres.com/
 [psql]: https://www.postgresql.org/
 [jst]: https://jestjs.io/
