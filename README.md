@@ -2,7 +2,7 @@
 
 ### Introduction
 
-The web app is powered with REST API so that it can interact with different platforms. [PSQL][psql] is used as a database and [node-postgress][npl] to connect with. The aim of the project is to replicate news websites such as Reddit and etc. Testing is done with JEST and Supertest.
+The web app is powered with REST API so that it can interact with different platforms. [PSQL][psql] is used as a database and [node-postgress][npl] to connect with. The aim of the project is to replicate news websites such as Reddit and etc. Testing is done with [Jest][jst] and [Supertest][stst].
 
 ### Installation
 
@@ -64,6 +64,8 @@ MIT
 [//]: #
 [npl]: https://node-postgres.com/
 [psql]: https://www.postgresql.org/
+[jst]: https://jestjs.io/
+[stst]: https://www.npmjs.com/package/supertest
 [esql]: https://www.elephantsql.com/
 [rndr]: https://render.com/
 
