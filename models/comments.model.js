@@ -1,6 +1,8 @@
 const db = require('../db/connection')
 
 exports.insertComment = (article_id, body) => {
+	if (body.body === undefined || body.body === '')
+		return Promise.reject({ status: 400, msg: 'Body is missing' })
 	return db
 		.query(
 			`INSERT INTO comments (body, article_id, author)
