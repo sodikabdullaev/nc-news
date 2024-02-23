@@ -51,7 +51,7 @@ describe('Articles', () => {
 			.get('/api/articles/999')
 			.expect(404)
 			.then(({ body: { msg } }) => {
-				expect(msg).toBe('Not found')
+				expect(msg).toBe('Article not found')
 			})
 	})
 	it('GET:400 /api/articles/invalidId responds bad request given invalid id', () => {
@@ -108,7 +108,7 @@ describe('Articles', () => {
 			.get('/api/articles/999/comments')
 			.expect(404)
 			.then(({ body: { msg } }) => {
-				expect(msg).toBe('Not found')
+				expect(msg).toBe('Article not found')
 			})
 	})
 	it('GET: 400 /api/articles/invalidId/comments responds with bad request for invalid article id', () => {
@@ -160,7 +160,7 @@ describe('Articles', () => {
 				expect(comment.article_id).toBe(1)
 			})
 	})
-	it('POST 400 /api/articles/article_id/comments responds with bad request when poseted non-exist author name', () => {
+	it('POST 404 /api/articles/article_id/comments responds with user not found ', () => {
 		const body = {
 			body: 'We can do comments while testing do not we?',
 			author: 'iAmNotinUsers',
@@ -169,23 +169,37 @@ describe('Articles', () => {
 			.post('/api/articles/1/comments')
 			.set('Accept', 'application/json')
 			.send(body)
-			.expect(400)
+			.expect(404)
 			.then(({ body: { msg } }) => {
-				expect(msg).toBe('Bad request')
+				expect(msg).toBe('User not found')
 			})
 	})
-	it('POST 400 /api/articles/article_id/comments responds with bad request when body is empty or non-string type or invalid id', () => {
+	it('POST 400 /api/articles/article_id/comments responds body is missing when body is empty but user is valid', () => {
 		const body = {
-			body: 999,
+			body: '',
+			author: 'icellusedkars',
+		}
+		return request(app)
+			.post('/api/articles/1/comments')
+			.set('Accept', 'application/json')
+			.send(body)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe('Body is missing')
+			})
+	})
+	it('POST 404 /api/articles/article_id/comments responds with article not found for non-exist article id', () => {
+		const body = {
+			body: 'Some comment goes here',
 			author: 'icellusedkars',
 		}
 		return request(app)
 			.post('/api/articles/999/comments')
 			.set('Accept', 'application/json')
 			.send(body)
-			.expect(400)
+			.expect(404)
 			.then(({ body: { msg } }) => {
-				expect(msg).toBe('Bad request')
+				expect(msg).toBe('Article not found')
 			})
 	})
 	it('GET: 200 /api/articles/1 responds with matching article also count of its comments', () => {
@@ -194,6 +208,7 @@ describe('Articles', () => {
 			.expect(200)
 			.then(({ body: { article } }) => {
 				expect(typeof article.comment_count).toBe('number')
+				expect(article.comment_count).toBe(11)
 			})
 	})
 })
