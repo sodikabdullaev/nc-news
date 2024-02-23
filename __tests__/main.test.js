@@ -278,3 +278,15 @@ describe('Articles with queries', () => {
 			})
 	})
 })
+describe('Articles sorted', () => {
+	it('GET: 200 /api/articles?sort_by=title responds with list of articles sorted with title column from the table', () => {
+		return request(app)
+			.get('/api/articles?sort_by=title')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.map((article) => article.title)).toBeSorted({
+					descending: true,
+				})
+			})
+	})
+})
