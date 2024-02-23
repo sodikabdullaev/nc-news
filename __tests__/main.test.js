@@ -239,6 +239,15 @@ describe('Users', () => {
 				})
 			})
 	})
+	it('GET: 200 /api/users/icellusedkars responds with matching user data', () => {
+		return request(app)
+			.get('/api/users/icellusedkars')
+			.expect(200)
+			.then(({ body: { user } }) => {
+				expect(user.username).toBe('icellusedkars')
+				expect(user.name).toBe('sam')
+			})
+	})
 })
 
 describe('Articles with queries', () => {
