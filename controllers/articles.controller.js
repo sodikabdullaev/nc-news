@@ -15,8 +15,8 @@ exports.getArticleById = (req, res, next) => {
 		.catch(next)
 }
 exports.getArticles = (req, res, next) => {
-	const { topic } = req.query
-	const promises = [selectArticles(topic)]
+	const { topic, sort_by, order } = req.query
+	const promises = [selectArticles(topic, sort_by, order)]
 	if (topic) promises.push(getTopicBySlug(topic))
 
 	Promise.all(promises)

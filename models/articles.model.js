@@ -15,19 +15,29 @@ exports.selectArticleById = (id) => {
 			} else return rows
 		})
 }
-exports.selectArticles = (topic) => {
+exports.selectArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	const values = []
-	const conditions = []
+
+	if (!['title', 'topic', 'author', 'body', 'created_at'].includes(sort_by)) {
+		return Promise.reject({ status: 400, msg: 'Invalid sort query' })
+	}
+
+	if (!['asc', 'desc'].includes(order)) {
+		return Promise.reject({ status: 400, msg: 'Invalid order query' })
+	}
+
 	let sql = `SELECT articles.author, articles.title, articles.article_id, 
     articles.topic, articles.created_at, articles.votes,
     articles.article_img_url, count(comments.article_id)::int as comment_count 
     FROM articles LEFT JOIN comments on articles.article_id=comments.article_id`
+
 	if (topic) {
 		sql += ' WHERE articles.topic = $1 '
 		values.push(topic)
 	}
-	sql += ` GROUP BY articles.article_id
-    ORDER BY articles.created_at desc`
+	sql += ` GROUP BY articles.article_id `
+	sql += ` ORDER BY articles.${sort_by} ${order} `
+
 	return db.query(sql, values).then(({ rows }) => {
 		if (rows.length === 0 && topic === undefined)
 			return Promise.reject({ status: 404, msg: 'Not found' })
