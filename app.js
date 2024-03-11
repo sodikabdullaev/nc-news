@@ -5,8 +5,10 @@ const {
 	handleServerErrors,
 } = require('./controllers/errors.controller')
 const appRouter = require('./routes/app-router')
+const cors = require('cors')
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 app.use('/api', appRouter)
